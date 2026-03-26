@@ -1,7 +1,7 @@
 [project]
 name = "publish-pypi"
 version = "0.1.0"
-description = "Add your description here"
+description = "Test to publish packages with Github Actions"
 readme = "README.md"
 authors = [
     { name = "Matthieu Boubat", email = "matthieu@boubat.ch" }

@@ -1,4 +1,6 @@
 name: "Publish"
+permissions:
+  contents: write  
 
 on:
   workflow_dispatch:
@@ -9,7 +11,28 @@ on:
       - 'src/publish_pypi/**'
 
 jobs:
-  run:
+
+  bump_version:
+    if: ${{ ! (github.event.head_commit.message == 'Bump API version') }}
+    name: Bump API version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+      - name: Bump API version
+        run: uv version --bump patch
+      - name: Commit new version
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}"@users.noreply.github.com
+          git add pyproject.toml
+          git commit -m "Bump API version"
+          git push --force-with-lease
+      
+  publish:
+    if: ${{ github.event.head_commit.message == 'Bump API version' }}
     runs-on: ubuntu-latest
     environment:
       name: pypi

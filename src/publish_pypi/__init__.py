@@ -1,2 +1,3 @@
-def main() -> None:
-    print("Hello from publish-pypi!")
+from .foo import FOO
+
+print(f"FOO = {FOO}")

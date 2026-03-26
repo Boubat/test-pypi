@@ -12,10 +12,15 @@ on:
 
 jobs:
 
-  bump_version:
+  bump_and_publish:
     if: ${{ ! (github.event.head_commit.message == 'Bump API version') }}
     name: Bump API version
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+    permissions:
+      id-token: write
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -23,28 +28,32 @@ jobs:
         uses: astral-sh/setup-uv@v7
       - name: Bump API version
         run: uv version --bump patch
-      - name: Commit new version
+      - name: Commit and push new version
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}"@users.noreply.github.com
           git add pyproject.toml
           git commit -m "Bump API version"
           git push --force-with-lease
-      
-  publish:
-    if: ${{ github.event.head_commit.message == 'Bump API version' }}
-    runs-on: ubuntu-latest
-    environment:
-      name: pypi
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-      - name: Build
+      - name: Build package
         run: uv build
-      - name: Publish
+      - name: Publish package
         run: uv publish --publish-url https://test.pypi.org/legacy
+      
+  # publish:
+  #   if: ${{ github.event.head_commit.message == 'Bump API version' }}
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #     name: pypi
+  #   permissions:
+  #     id-token: write
+  #     contents: read
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v6
+  #     - name: Install uv
+  #       uses: astral-sh/setup-uv@v7
+  #     - name: Build
+  #       run: uv build
+  #     - name: Publish
+  #       run: uv publish --publish-url https://test.pypi.org/legacy

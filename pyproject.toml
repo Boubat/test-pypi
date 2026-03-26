@@ -1,6 +1,6 @@
 [project]
 name = "publish-pypi"
-version = "0.1.0"
+version = "0.1.1"
 description = "Test to publish packages with Github Actions"
 readme = "README.md"
 authors = [

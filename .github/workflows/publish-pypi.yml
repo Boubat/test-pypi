@@ -31,7 +31,7 @@ jobs:
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}"@users.noreply.github.com
-          git checkout -b main
+          git checkout -b main origin/main
           git add pyproject.toml
           git commit -m "Bump API version"
           git push --force-with-lease

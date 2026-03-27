@@ -34,6 +34,8 @@ jobs:
           git add pyproject.toml
           git commit -m "Bump API version"
           git push --force-with-lease
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
       - name: Build package
         run: uv build
       - name: Publish package
